@@ -7,15 +7,10 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-require('dotenv').config();
+
 
 var app = express();
-var session = require('express-session');
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  saveUninitialized: false,
-  resave: false
-}))
+
 
 
 // view engine setup
