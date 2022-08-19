@@ -13,4 +13,18 @@ router.get('/', function(req, res, next) {
   
 });
 
+router.get('/add', function(req, res, next) {
+   db.query('select barcode, nama_barang, harga_jual from info_barang')
+   .then(barang=> res.render('penjualan/add', {
+      currentPage:'nambah gan!', 
+      barang:barang.rows[0]
+   }))
+  
+});
+router.post('/start', function(req, res, next) {
+   db.query('insert into penjualan (harga) values (0) returning *')
+   .then(json=>res.json(json.rows))
+   
+  
+});
 module.exports = router;
