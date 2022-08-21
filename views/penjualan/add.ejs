@@ -1,0 +1,144 @@
+<%-include('../partial/header')%>
+<div class="card">
+    <div class="card-header">
+        <h1>NEW Penjualan</h1>
+    </div>
+</div>
+<div class="card-header">
+<form  id='start'class="row g-3" class="start" method="post">
+    <div class="col-md-6">
+      <label for="no-invoice" class="form-label" >NO Invoice</label>
+      <input type="text" class="form-control" id="no_invoice" value="<%=penjualan.kode_jualan%>" class="no-invoice"  name="noInvoice" readonly>
+    </div>
+    <div class="col-md-6">
+      <label for="tanggal" class="form-label">Tanggal</label>
+      <input type="text" class="form-control" id="tanggal" value="<%=moment(penjualan.tanggal_penjualan).format('DD MMM YYYY')%>" class="tanggal" readonly>
+    </div>
+   <div class="col-md-6">
+        <label for="kode_barang" class="form-label">Kode barang</label>
+       <select name="kode_barang" id="kode_barang"  class="kode_barang"required>
+        <% barang.forEach((item)=> {%>
+          <option value="<%=item.barcode%>" name="kode_barang"><%=item.barcode + ' ' + item.nama_barang%></option>
+          <%}) %>
+       </select>
+      </div>
+      <div class="col-md-6">
+        <label for="total_harga" class="form-label">total  barangbang</label>
+        <input type="text" class="form-control" id="total_barang" name="totalBarang" class="total_barang" required>
+      </div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary" >Gas Bang!</button>
+      </div>
+    </div>
+
+  </form>
+  <hr>
+</div>
+<div class="card-header">
+  <form class="row g-3" class="detail_barang" id="detail_barang">
+      
+    </form>
+    <hr>
+  </div>
+
+
+<div class="card-body">
+    <div class="card-header">
+        <h1>Detail Penjualan</h1>
+    </div>
+</div>
+     <table class="table table-stripped">
+        <thead>
+            <tr>
+               
+                <th>Barcode</th>
+                <th>Nama Barang</th>
+                <th>Jumlah Barang</th>
+                <th>Harga Jual</th>
+                <th>Total Harga</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+
+     </table> 
+    <div class="card-footer">
+      <div class="row mb-3">
+        <label for="total_harga" class="col-sm-2 col-form-label col-form-label-sm">Total Harga </label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control form-control-sm" id="total_harga" readonly>
+        </div>
+      </div>
+      <form action="">
+      <div class="row mb-3">
+        <label for="total_bayar" class="col-sm-2 col-form-label">Total Bayar </label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="total_bayar" >
+        </div>
+      </div>
+      <div class="row">
+        <label for="kembalian" class="col-sm-2 col-form-label col-form-label-lg">Kembalian</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control form-control-lg" id="kembalian" >
+        </div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Gas Bang!</button>
+      </div>
+    </form>
+    </div> 
+<script>
+
+//====================================BACA DETAIL DATA ================
+function readData(id){
+$.ajax({
+  method: "GET",
+  url: `http://localhost:3000/penjualan/show/${id}`,
+  dataType : "json",
+  
+}).done(function(response){
+  let html = ''
+  response.hasilJualan.forEach(item=>{
+    html+= ` <tr>
+          <td>${item.barcode}</td>
+          <td>${item.nama_barang}</td>
+          <td>${item.jumlah}</td>
+          <td>${item.harga_jual}</td>
+          <td>${item.total_harga}</td>
+        </tr>`
+  })
+  $('table tbody').html(html)
+}).fail(function(err){
+    alert('gagal pake jquery ')
+  })
+}
+//========================================= FUNCTON NAMBAH DETAIL DATA ==============================
+function tambah(id,invoice, barcode, total){
+  $.ajax({
+  method: "POST",
+  url: `http://localhost:3000/penjualan/show/${id}`,
+  dataType : "json",
+  data: {invoice, barcode, total}
+}).done(function( response) {
+readData(id)
+
+  })
+}
+//=================================LOAD DATA =====================
+$(document).ready(function(){
+  $('#start').submit(function(event){
+    event.preventDefault();
+    const invoice =$('#no_invoice').val()
+    const barcode =$('#kode_barang').val()
+    const jumlah = parseInt($('#total_barang').val())
+    const id = $('#no_invoice').val()
+    console.log(invoice,barcode,jumlah,id,'cek')
+  
+    tambah(id,invoice,barcode,jumlah)
+    readData(id)
+  })
+})
+</script>
+<%-include('../partial/footer')%>

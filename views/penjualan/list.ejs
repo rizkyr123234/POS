@@ -1,0 +1,68 @@
+<%-include('../partial/header')%>
+<div class="card">
+    <div class="card-header">
+        <h1>History Penjualan</h1>
+    </div>
+</div>
+<table class="table table-stripped">
+    <thead>
+        <tr>
+           
+            <th>Invoice</th>
+            <th>Total Harga</th>
+            <th>Total Bayar</th>
+            <th>Kembalian</th>
+            <th>Tanggal Transaksi</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%item.forEach(item=> {%>
+            <tr>
+                <td > <a href="/penjualan?invoice=<%= item.kode_jualan%>"><%= item.kode_jualan%></a></td>
+                <td><%=item.harga%></td>
+                <td><%=item.total_bayar%></td>
+                <td style="text-align:right;"><%=item.kembalian%></td>
+                <td><%=moment(item.tanggal_penjualan).format('DD MMMM YYYY')%></td>
+                <td><a href="/penjualan/show/<%=item.kode_jualan%>" class="btn btn-danger">shows</a></td>
+            </tr>
+            <%}) %>
+    </tbody>
+    %>
+
+</table> 
+<div class="card">
+    <div class="card-header">
+        <h1>Detail Penjualan</h1>
+    </div>
+</div>
+    <table class="table table-stripped">
+        <thead>
+            <tr>
+               
+                <th>Barcode</th>
+                <th>Nama Barang</th>
+                <th>Jumlah Barang</th>
+                <th>Harga Jual</th>
+                <th>Total Harga</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%details.forEach(item=> {%>
+                <tr>
+                    <td><%=item.barcode%></td>
+                    <td><%=item.nama_barang%></td>
+                    <td><%=item.jumlah%></td>
+                    <td style="text-align:right;"><%=item.harga_jual%></td>
+                    <td><%=item.total_harga%></td>
+                </tr>
+                <%}) %>
+        </tbody>
+        %>
+
+    </table>
+    <div class="card-footer">
+        <a href="/penjualan/create" class = "btn btn-danger">Tambah bang! </a>
+    </div>
+
+<%-include('../partial/footer')%>

@@ -1,0 +1,32 @@
+<%-include('../partial/header')%>
+<div class="card">
+    <div class="card-header">
+        <h1>Pergudangan</h1>
+    </div>
+</div>
+    <table class="table table-stripped">
+        <thead>
+            <tr>
+                <th>BARCODE</th>
+                <th>Nama Barang</th>
+                <th>Jumlah Barang</th>
+                <th>Harga Barang</th>
+                <th>Harga Jual</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% item.forEach(item=> {%>
+                <tr>
+                    <td><%=item.barcode%></td>
+                    <td><%=item.nama_barang%></td>
+                    <td><%=item.jumlah_barang%></td>
+                    <td style="text-align:right;"><%=formatter.format(item.harga_barang)%></td>
+                    <td><%=formatter.format(item.harga_jual)%></td>
+                </tr>
+                <%}) %>
+        </tbody>
+        %>
+
+    </table>
+
+<%-include('../partial/footer')%>
