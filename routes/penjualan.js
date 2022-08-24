@@ -33,7 +33,7 @@ router.get('/show/:kode_jualan', function(req, res, next) {
       kodeJualan,
       moment
 
-   },console.log(akhir.rows)))))
+   }))))
    
    
 });
