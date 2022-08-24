@@ -22,7 +22,9 @@ CREATE OR REPLACE FUNCTION update_penjualan() RETURNS TRIGGER AS $penjualan_audi
         ELSIF (TG_OP = 'DELETE') THEN
         --update stock
               SELECT jumlah_barang INTO jumlah_barang_lama from info_barang WHERE barcode = NEW.barcode;
-            UPDATE info_barang set jumlah_barang = jumlah_barang_lama+NEW.jumlah WHERE barcode = NEW.barcode;
+              RAISE NOTICE 'jumlah_barang_lama is currently %',jumlah_barang_lama; 
+            UPDATE info_barang set jumlah_barang = jumlah_barang_lama+OLD.jumlah WHERE barcode = NEW.barcode;
+            RAISE NOTICE 'NEW.jumlah is currently %',NEW.jumlah;
         END IF;
          --update penjualan 
          SELECT sum(total_harga) INTO sum_harga FROM detail WHERE kode_jualan = NEW.kode_jualan ;

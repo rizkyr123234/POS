@@ -21,30 +21,43 @@ router.get('/create', function(req, res, next) {
 });
 
 router.get('/show/:kode_jualan', function(req, res, next) {
+   let kodeJualan =req.params.kode_jualan || ''
   
-   db.query('select * from penjualan where kode_jualan = $1', [req.params.kode_jualan])
+   db.query('select * from penjualan where kode_jualan = $1', [kodeJualan])
    .then(barang=>db.query('select barcode,nama_barang,harga_jual from info_barang ')
-   .then(json=>res.render('penjualan/add',{
+   .then(hei =>db.query('select detail.barcode, info_barang.nama_barang, detail.jumlah, info_barang.harga_jual, detail.total_harga from detail join penjualan on penjualan.kode_jualan = detail.kode_jualan join info_barang on detail.barcode = info_barang.barcode  where detail.kode_jualan = $1 ORDER By id_detail',[kodeJualan])
+   .then(akhir=>res.render('penjualan/add',{
       penjualan:barang.rows[0],
-      barang:json.rows,
-      moment,
-      currentPage:"edit"
-   })))
+      barang:hei.rows,
+      currentPage :'edit',
+      kodeJualan,
+      moment
+
+   },console.log(akhir.rows)))))
+   
    
 });
 
 router.post('/show/:kode_jualan',function(req,res){
+   
    let invoice = req.body.noInvoice
    let barcode = req.body.kode_barang
    let jumlah = parseInt(req.body.totalBarang)
-   console.log(invoice,barcode,jumlah,'cekcek')
-   db.query(`insert into detail(kode_jualan, barcode, jumlah) values(${invoice}, ${barcode}, ${jumlah})`)
-   res.redirect(`${invoice}`)
-})
-router.get('/show/:kode_jualan',function(res,req,){
+   db.query(`insert into detail (kode_jualan, barcode, jumlah) values('${invoice}', '${barcode}', ${jumlah})`)
+   .then(cek=>db.query('select harga from penjualan where kode_jualan=$1', [invoice]))
+   .then(hasilInsert=>db.query('select detail.barcode, info_barang.nama_barang, detail.jumlah, info_barang.harga_jual, detail.total_harga from detail join penjualan on penjualan.kode_jualan = detail.kode_jualan join info_barang on detail.barcode = info_barang.barcode  where detail.kode_jualan = $1 ORDER By id_detail',[invoice])
+   .then(hasil=>res.json({hasilPenjualan:hasil.rows,  moment, totalBayar:hasilInsert.rows[0]}))
+)
+   
   
-   let kode_jualan =req.params.kode_jualan || ''
-   db.query('select detail.barcode, info_barang.nama_barang, detail.jumlah, info_barang.harga_jual, detail.total_harga from detail join penjualan on penjualan.kode_jualan = detail.kode_jualan join info_barang on detail.barcode = info_barang.barcode  where detail.kode_jualan = $1 ORDER By id_detail',[kode_jualan])
-   .then(hai=>res.redirect('penjualan/add',{hasilJualan:hai.rows}))
+   
 })
+// router.get('/show/:kode_jualan',function(res,req,){
+  
+//    let kode_jualan =req.body.kode_jualan || ''
+//    console.log(kode_jualan,'cekcek')
+//    
+  
+//    .then(hai=>res.render('penjualan/add',{hasilJualan:hai.rows}),console.log(hai.rows, 'cek 1'))
+// })
 module.exports = router;

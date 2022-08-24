@@ -1,0 +1,29 @@
+<%-include('../partial/header')%>
+<div class="card-body">
+    <h1> TAMBAH BARANG </h1>
+    <form method="post">
+        <div class="mb-3">
+          <label for="barcode" class="form-label" name="barcode" >Barcode</label>
+          <input type="text" class="form-control" id="barcode"  placeholder="Input Barcode" value="" required>
+        </div>
+        <div class="mb-3">
+          <label for="namaBarang" class="form-label">Nama Barang</label>
+          <input type="text" class="form-control" id="namaBarang" required name="namaBarang" value="">
+        </div>
+        <div class="mb-3">
+            <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
+            <input type="number" class="form-control" id="jumlahBarang" name="jumlahBarang" value="">
+          </div>
+          <div class="mb-3">
+            <label for="hargaBarang" class="form-label">Harga Barang</label>
+            <input type="text" class="form-control" id="hargaBarang" required placeholder="ex: 10000" value="">
+          </div>
+          <div class="mb-3">
+            <label for="hargaJual" class="form-label">Harga Jual</label>
+            <input type="text" class="form-control" id="hargaJual" required placeholder="ex: 10000" value="">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+     
+</div>
+<%-include('../partial/footer')%>

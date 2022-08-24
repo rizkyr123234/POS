@@ -5,7 +5,7 @@
     </div>
 </div>
 <div class="card-header">
-<form  id='start'class="row g-3" class="start" method="post">
+<form  id='start'class="row g-3" class="start" >
     <div class="col-md-6">
       <label for="no-invoice" class="form-label" >NO Invoice</label>
       <input type="text" class="form-control" id="no_invoice" value="<%=penjualan.kode_jualan%>" class="no-invoice"  name="noInvoice" readonly>
@@ -28,7 +28,7 @@
       </div>
       </div>
       <div class="col-12">
-        <button type="submit" class="btn btn-primary" >Gas Bang!</button>
+        <button type="submit" class="btn btn-primary" href="penjualan/show/<%=penjualan.kode_jualan%>">Gas Bang!</button>
       </div>
     </div>
 
@@ -60,22 +60,23 @@
             </tr>
         </thead>
         <tbody>
-          <tr></tr>
-        </tbody>
+          
+    </tbody>
+  
 
      </table> 
     <div class="card-footer">
       <div class="row mb-3">
         <label for="total_harga" class="col-sm-2 col-form-label col-form-label-sm">Total Harga </label>
         <div class="col-sm-10">
-          <input type="text" class="form-control form-control-sm" id="total_harga" readonly>
+          <input type="text" class="form-control form-control-sm" id="total_harga"  val="" readonly class="total_harga">
         </div>
       </div>
       <form action="">
       <div class="row mb-3">
         <label for="total_bayar" class="col-sm-2 col-form-label">Total Bayar </label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="total_bayar" >
+          <input type="text" class="form-control" id="total_bayar" class="total_bayar" >
         </div>
       </div>
       <div class="row">
@@ -83,24 +84,39 @@
         <div class="col-sm-10">
           <input type="text" class="form-control form-control-lg" id="kembalian" >
         </div>
-      </div>
+      </div> 
+      
       <div class="col-12">
         <button type="submit" class="btn btn-primary">Gas Bang!</button>
       </div>
     </form>
     </div> 
 <script>
-
+var noInvoice = '<%= kodeJualan %>'
 //====================================BACA DETAIL DATA ================
-function readData(id){
-$.ajax({
-  method: "GET",
-  url: `http://localhost:3000/penjualan/show/${id}`,
+
+function tambah( kode_barang, totalBarang){
+ 
+  $.ajax({
+  method: "POST",
+  url: `http://localhost:3000/penjualan/show/${noInvoice}`,
   dataType : "json",
+  data: {noInvoice, kode_barang, totalBarang}
+}).done(function( response) {
+  drawData(response.hasilPenjualan)
+  drawData2(response.totalBayar.harga)
   
-}).done(function(response){
+  // drawData2(response.totalBayar)
+  
+  $("#start").trigger('reset')
+
+  })
+}
+
+function drawData (data) {
+  
   let html = ''
-  response.hasilJualan.forEach(item=>{
+  data.forEach(item=>{
     html+= ` <tr>
           <td>${item.barcode}</td>
           <td>${item.nama_barang}</td>
@@ -110,35 +126,46 @@ $.ajax({
         </tr>`
   })
   $('table tbody').html(html)
-}).fail(function(err){
-    alert('gagal pake jquery ')
-  })
-}
-//========================================= FUNCTON NAMBAH DETAIL DATA ==============================
-function tambah(id,invoice, barcode, total){
-  $.ajax({
-  method: "POST",
-  url: `http://localhost:3000/penjualan/show/${id}`,
-  dataType : "json",
-  data: {invoice, barcode, total}
-}).done(function( response) {
-readData(id)
+  
 
+}
+function drawData2(data){
+  $('#total_harga').val(data)
+}
+
+//========================================= FUNCTON NAMBAH DETAIL DATA ==============================
+
+function readData(){
+$.ajax({
+  method: "GET",
+  url: `http://localhost:3000/penjualan/show/${noInvoice}`,
+  dataType : "json",
+ 
+  
+}).done(function(response){
+ 
+  drawData(response.hasilPenjualan)
+}).fail(function(err){
+    
+    console.log(err)
   })
 }
 //=================================LOAD DATA =====================
 $(document).ready(function(){
+  
   $('#start').submit(function(event){
     event.preventDefault();
-    const invoice =$('#no_invoice').val()
+   
     const barcode =$('#kode_barang').val()
     const jumlah = parseInt($('#total_barang').val())
-    const id = $('#no_invoice').val()
-    console.log(invoice,barcode,jumlah,id,'cek')
-  
-    tambah(id,invoice,barcode,jumlah)
-    readData(id)
+    tambah(barcode,jumlah)
+   
+   
+    
+   
   })
+
+ 
 })
 </script>
 <%-include('../partial/footer')%>
