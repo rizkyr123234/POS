@@ -72,29 +72,30 @@
           <input type="text" class="form-control form-control-sm" id="total_harga"  val="" readonly class="total_harga">
         </div>
       </div>
-      <form action="">
+
+      <form action="" method="post" class="kembalian" id="kembalian1">
       <div class="row mb-3">
         <label for="total_bayar" class="col-sm-2 col-form-label">Total Bayar </label>
         <div class="col-sm-10">
-          <input type="text"  onkeyup="myFunction()" class="form-control" id="total_bayar" class="total_bayar"  placeholder="masukkan angka pls ">
+          <input type="text"  onkeyup="myFunction()" class="form-control" id="total_bayar" class="total_bayar"  placeholder="masukkan angka pls " name="total_bayar">
         </div>
       </div>
       <div class="row">
         <label for="kembalian" class="col-sm-2 col-form-label col-form-label-lg">Kembalian</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control form-control-lg" id="kembalian" class="kembalian"  readonly>
+          <input type="text" class="form-control form-control-lg" id="kembalian" class="kembalian" name="kembalian" readonly>
         </div>
       </div> 
       
       <div class="col-12">
-        <button type="submit" class="btn btn-primary">Gas Bang!</button>
+        <button type="submit" class="btn btn-primary" >Gas Bang!</button>
       </div>
     </form>
     </div> 
 <script>
 var noInvoice = '<%= kodeJualan %>'
 //====================================BACA DETAIL DATA ================
-var kurang 
+
 function tambah( kode_barang, totalBarang){
  
   $.ajax({
@@ -104,15 +105,30 @@ function tambah( kode_barang, totalBarang){
   data: {noInvoice, kode_barang, totalBarang}
 }).done(function( response) {
   drawData(response.hasilPenjualan)
-  drawData2(response.totalBayar.harga)
+   drawData2(response.totalBayar.harga)
   kurang = response.totalBayar.harga
-  // drawData2(response.totalBayar)
+  
   
   $("#start").trigger('reset')
-
   })
 }
 
+
+function tambahKembalian( total_bayar, kembalian){
+ 
+ $.ajax({
+ method: "PUT",
+ url: `http://localhost:3000/penjualan/show/${noInvoice}`,
+ dataType : "json",
+ data: {noInvoice, total_bayar, kembalian}
+}).done(function( response) {
+ 
+ 
+ $("#kembalian1").trigger('reset')
+ window.location='/penjualan'
+
+ })
+}
 function drawData (data) {
   
   let html = ''
@@ -156,11 +172,11 @@ function myFunction() {
   let y = parseInt(kurang)
   let z = parseInt(x.value) ==  'NaN' ? 0 :parseInt(x.value)
   let xy = z-y
-  
+  console.log(y,z)
   document.getElementById("kembalian").value = z-y;
   
 }
-console.log($('#total_harga').val())
+
 //=================================LOAD DATA =====================
 $(document).ready(function(){
   
@@ -170,6 +186,14 @@ $(document).ready(function(){
     const barcode =$('#kode_barang').val()
     const jumlah = parseInt($('#total_barang').val())
     tambah(barcode,jumlah)
+  })
+
+  $('#kembalian1').submit(function(event){
+    event.preventDefault();
+   
+    const totalBayar =$('#total_bayar').val()
+    const kembalian = parseInt($('#kembalian').val())
+    tambahKembalian(totalBayar,kembalian)
   })
   // $('#kembalian').onkeyup = function(){kembalian()}
 })

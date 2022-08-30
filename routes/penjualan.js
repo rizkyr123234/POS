@@ -39,7 +39,7 @@ router.get('/show/:kode_jualan', function(req, res, next) {
 });
 
 router.post('/show/:kode_jualan',function(req,res){
-   
+   console.log(req.body.total_bayar, 'cekcek')
    let invoice = req.body.noInvoice
    let barcode = req.body.kode_barang
    let jumlah = parseInt(req.body.totalBarang)
@@ -52,12 +52,15 @@ router.post('/show/:kode_jualan',function(req,res){
   
    
 })
-// router.get('/show/:kode_jualan',function(res,req,){
-  
-//    let kode_jualan =req.body.kode_jualan || ''
-//    console.log(kode_jualan,'cekcek')
-//    
-  
-//    .then(hai=>res.render('penjualan/add',{hasilJualan:hai.rows}),console.log(hai.rows, 'cek 1'))
-// })
+router.put('/show/:kode_jualan', function(req,res){
+   let kodeJualan =req.params.kode_jualan
+   let invoice = req.body.noInvoice
+   let kembalian = parseInt(req.body.kembalian)
+   let total = parseInt(req.body.total_bayar)
+   console.log(req.body, 'cek req body')
+   db.query(`update penjualan set total_bayar= ${total}, kembalian = ${kembalian} where kode_jualan = '${invoice}'`)
+   .then(hasilbayar=>res.json(hasilbayar))
+   
+})
+
 module.exports = router;
