@@ -24,7 +24,10 @@
                 <td><%=item.total_bayar%></td>
                 <td style="text-align:right;"><%=item.kembalian%></td>
                 <td><%=moment(item.tanggal_penjualan).format('DD MMMM YYYY')%></td>
-                <td><a href="/penjualan/show/<%=item.kode_jualan%>" class="btn btn-danger">shows</a></td>
+                <td><a href="/penjualan/show/<%=item.kode_jualan%>" class="btn btn-danger">shows</a>
+                    <a href="/penjualan/delete/<%=item.kode_jualan%>" class="btn btn-success">Delete</a>
+                </td>
+
             </tr>
             <%}) %>
     </tbody>

@@ -57,6 +57,7 @@
                 <th>Jumlah Barang</th>
                 <th>Harga Jual</th>
                 <th>Total Harga</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -139,6 +140,10 @@ function drawData (data) {
           <td>${item.jumlah}</td>
           <td>${item.harga_jual}</td>
           <td>${item.total_harga}</td>
+          <td>
+            <button type="button" class="btn btn-success btn-sm btn-edit">edit</button>  
+            <button type="button" class="btn btn-danger btn-sm btn-delete" deletedata="${item.barcode}">hapus</button>
+            </td>
         </tr>`
   })
   $('table tbody').html(html)
@@ -176,7 +181,16 @@ function myFunction() {
   document.getElementById("kembalian").value = z-y;
   
 }
+function deletedata(barcode){
+  $.ajax({
+  method: "DELETE",
+  url: `http://localhost:3000/penjualan/show/${barcode}`,
+  dataType : "json",
+}).done(function( response) {
+readData()
 
+  })
+}
 //=================================LOAD DATA =====================
 $(document).ready(function(){
   

@@ -53,7 +53,7 @@ router.post('/show/:kode_jualan',function(req,res){
    
 })
 router.put('/show/:kode_jualan', function(req,res){
-   let kodeJualan =req.params.kode_jualan
+   
    let invoice = req.body.noInvoice
    let kembalian = parseInt(req.body.kembalian)
    let total = parseInt(req.body.total_bayar)
@@ -62,5 +62,18 @@ router.put('/show/:kode_jualan', function(req,res){
    .then(hasilbayar=>res.json(hasilbayar))
    
 })
+router.get('/delete/:kode_jualan',function(req,res){
+  
+   let kodeJualan =req.params.kode_jualan
+   console.log(kodeJualan,'cek')
 
+   db.query('DELETE FROM detail WHERE kode_jualan = $1', [kodeJualan])
+   .then(delete1=>db.query('DELETE FROM penjualan WHERE kode_jualan=$1',[kodeJualan]))
+   .then(delete2=>res.redirect('/penjualan'))
+})
+router.delete('/show/:kode_jualan',function(req,res){
+   let kode=req.params.kode_jualan
+   db.query('DELETE from detail where barcode = $1'[kode])
+   .then(hasil=>res.json(hasil))
+})
 module.exports = router;
